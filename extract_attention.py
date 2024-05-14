@@ -45,7 +45,7 @@ class AttnMapExtractor(object):
 
   def __init__(self, bert_config_file, init_checkpoint,
                max_sequence_length=128, debug=False):
-    make_placeholder = lambda name: tf.placeholder(
+    make_placeholder = lambda name: tf.compat.v1.placeholder(
         tf.int32, shape=[None, max_sequence_length], name=name)
     self._input_ids = make_placeholder("input_ids")
     self._segment_ids = make_placeholder("segment_ids")
@@ -66,8 +66,8 @@ class AttnMapExtractor(object):
     if not debug:
       print("Loading BERT from checkpoint...")
       assignment_map, _ = modeling.get_assignment_map_from_checkpoint(
-          tf.trainable_variables(), init_checkpoint)
-      tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
+          tf.compat.v1.trainable_variables(), init_checkpoint)
+      tf.compat.v1.train.init_from_checkpoint(init_checkpoint, assignment_map)
 
   def get_attn_maps(self, sess, examples):
     feed = {
@@ -118,8 +118,8 @@ def main():
 
   print("Extracting attention maps...")
   feature_dicts_with_attn = []
-  with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
+  with tf.compat.v1.Session() as sess:
+    sess.run(tf.compat.v1.global_variables_initializer())
     for batch_of_examples in examples_in_batches(examples, args.batch_size):
       attns = extractor.get_attn_maps(sess, batch_of_examples)
       for e, e_attn in zip(batch_of_examples, attns):
