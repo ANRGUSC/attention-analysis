@@ -103,7 +103,7 @@ def main():
 
   args = parser.parse_args()
 
-  random.seed(0)
+  #random.seed(0)
   current_doc_tokens = []
   segments = []
   tokenizer = tokenization.FullTokenizer(
@@ -141,7 +141,7 @@ def main():
   # random.shuffle(tokens)
   # tokens = tokens[:args.num_docs]
 
-  random.shuffle(segments)
+  #random.shuffle(segments)
   utils.write_json([{"tokens": s} for s in segments],
                    args.data_file.replace(".txt", "") + ".json")
 
