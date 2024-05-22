@@ -13,16 +13,27 @@ def preprocess_depparse_data(raw_data_file):
     for line in f:
       line = line.strip()
       if line:
-        word, label = line.split()
-        head, reln = label.split("-")
-        head = int(head)
-        current_example["words"].append(word)
-        current_example["relns"].append(reln)
-        current_example["heads"].append(head)
+        parts = line.split() #Ayah
+        if len(parts) == 2: #Ayah
+          word, label = line.split()
+          if "-" in label: #Ayah
+            head, reln = label.split("-")
+            try:
+              head = int(head)
+              current_example["words"].append(word)
+              current_example["relns"].append(reln)
+              current_example["heads"].append(head)
+            except ValueError:
+              print("Skipping line: {:}".format(line)) #Ayah
+          else:
+            print("Skipping line: {:}".format(line)) #Ayah
+        else: 
+          print("Skipping line: {:}".format(line)) #Ayah
       else:
-        examples.append(current_example)
-        current_example = {"words": [], "relns": [], "heads": []}
-  utils.write_json(examples, raw_data_file.replace(".txt", ".json"))
+        if current_example["words"]: #Ayah
+          examples.append(current_example)
+          current_example = {"words": [], "relns": [], "heads": []}
+    utils.write_json(examples, raw_data_file.replace(".txt", ".json"))
 
 
 def main():
@@ -32,7 +43,7 @@ def main():
       help="The location of dependency parsing data. Should contain files "
            "train.txt and dev.txt. See the README for expected data format.")
   args = parser.parse_args()
-  for split in ["train", "dev"]:
+  for split in ["word_dependencies"]: # Ayah - modified for one .txt file
     print("Preprocessing {:} data...".format(split))
     preprocess_depparse_data(os.path.join(args.data_dir, split + ".txt"))
   print("Done!")

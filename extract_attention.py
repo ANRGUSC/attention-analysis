@@ -5,11 +5,15 @@ import os
 import numpy as np
 import tensorflow as tf
 
+
 from bert import modeling
 from bert import tokenization
 import bpe_utils
 import utils
 
+import pickle
+
+tf.compat.v1.disable_v2_behavior()
 
 class Example(object):
   """Represents a single input sequence to be passed into BERT."""
@@ -97,6 +101,9 @@ def main():
                       help="Use tiny model for fast debugging.")
   parser.add_argument("--word_level", default=False, action='store_true',
                       help="Get word-level rather than token-level attention.")
+  parser.add_argument("--mode", default="first", type=str,
+                      help="How to aggregate token attention to get word "
+                            "attention (first, mean, max)")
   args = parser.parse_args()
 
   print("Creating examples...")
@@ -136,7 +143,9 @@ def main():
   outpath = args.preprocessed_data_file.replace(".json", "")
   outpath += "_attn.pkl"
   print("Writing attention maps to {:}...".format(outpath))
-  utils.write_pickle(feature_dicts_with_attn, outpath)
+  with open(outpath, 'wb') as file:
+    pickle.dump(feature_dicts_with_attn, file, protocol=pickle.HIGHEST_PROTOCOL)
+  #utils.write_pickle(feature_dicts_with_attn, outpath)
   print("Done!")
 
 
