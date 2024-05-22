@@ -31,6 +31,6 @@ def process_file(input_file_path, output_file_path):
 
 
 # Example usage
-input_path = '/Users/buckethoop/GitHub/BERTPROJ/attention-analysis-master/depparse/output_sentences.txt'
-output_path = '/Users/buckethoop/GitHub/BERTPROJ/attention-analysis-master/word_dependencies.txt'
+input_path = '/Users/buckethoop/GitHub/attention-analysis/output_sentences.txt'
+output_path = '/Users/buckethoop/GitHub/attention-analysis/word_dep.txt'
 process_file(input_path, output_path)
